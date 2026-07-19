@@ -83,6 +83,28 @@
 | **Keywords** | `report`, `reports`, `scheduled`, `on-demand`, `export`, `dashboard`, `alert`, `stock`, `valuation`, `what report`, `which`, `type`, `format` |
 | **Answer** | On-demand reports for purchasing managers: current stock levels, low stock alerts, transfer history, receiving history. For accounting: inventory valuation report, cost of goods report. All exportable to CSV and PDF. No scheduled/automated reports for v1. |
 
+### Omission 8: Shared Credentials & Account Security *(Operational Trap)*
+| Field | Value |
+|-------|-------|
+| **What's missing** | Whether shared logins should be prevented, whether every worker needs their own account, how to handle the night shift supervisor with no email, password sharing enforcement |
+| **Why omitted** | The packet literally TELLS you this problem exists ("tells another worker to log in as them") and HR wants it stopped. A coder sees "role-based access" and builds roles. A business thinker realizes the harder problem is getting 150 warehouse workers to stop sharing passwords when their supervisor is the one telling them to do it. |
+| **Thinking category** | Operational Realities |
+| **Weight** | HIGH |
+| **Points** | 10 |
+| **Keywords** | `shared`, `credential`, `log in as`, `password`, `another`, `sick`, `cover`, `absent`, `account`, `email`, `individual`, `own account`, `stop`, `prevent`, `HR`, `supervisor` |
+| **Answer** | Every worker must have their own account — no shared logins. The system should enforce this (no concurrent sessions from different devices for the same user). For the night shift supervisor without email: create an account with a username (no email required). Password resets can be done by IT/admin, not via email link. HR is serious about stopping credential sharing — they want it logged when someone tries to log in from a device that already has an active session for another user. |
+
+### Omission 9: Approval Workflow Reality vs. System *(Operational Trap)*
+| Field | Value |
+|-------|-------|
+| **What's missing** | Whether purchase approvals happen ONLY in the system, whether text/email approvals need to be retroactively recorded, how to handle the gap between "how things actually work" and "how the system expects them to work" |
+| **Why omitted** | The packet drops a huge hint: "Tom has been known to approve POs by text message." A technical engineer builds an approval workflow and calls it done. A business thinker asks: "Do we need to accommodate the reality that approvals sometimes happen outside the system, or do we force everything through the system?" This is the single most common failure mode in business software — building a perfect workflow that nobody follows. |
+| **Thinking category** | Change Management |
+| **Weight** | HIGH |
+| **Points** | 10 |
+| **Keywords** | `approve`, `text`, `message`, `outside`, `retroactive`, `workflow`, `reality`, `actual`, `force`, `accommodate`, `happen`, `follow`, `after the fact`, `Tom`, `verbal`, `phone`, `email`, `process` |
+| **Answer** | All PO approvals must go through the system — no more text approvals. This is a hard requirement from the CFO. However, the system should allow Tom to approve from his phone (mobile-responsive approval screen, not a text message). If someone enters a PO that was verbally approved before the system was built, there should be a way to record the approval with a note. Going forward: if it's not in the system, it didn't happen. Phase-in period: first 30 days, the system sends Tom an email notification for every PO so he doesn't miss any while adjusting to the new workflow. |
+
 ---
 
 ## Answers to Non-Omission Questions

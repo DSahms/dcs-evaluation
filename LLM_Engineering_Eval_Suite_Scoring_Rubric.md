@@ -491,7 +491,7 @@ README Quality: X/30 [S1] or X/35 [S2] or X/30 [S3]
   - Anti-pattern deductions: -X
 
 === FINAL SCORE ===
-Total: X/200 [S1] or X/250 [S2] or X/300 [S3]
+Total: X/230 [S1] or X/270 [S2] or X/315 [S3]
 Percentage: X%
 Grade: [A/B/C/D/F]
 ```

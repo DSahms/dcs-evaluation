@@ -1,0 +1,7 @@
+1. What barcode scanning hardware will warehouse workers use, and what format are the barcodes in?
+
+2. How should the two warehouses stay in sync? What's the expected latency between locations?
+
+3. What specific reports do purchasing managers and accounting need?
+
+4. What is the project about?

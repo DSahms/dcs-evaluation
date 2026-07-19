@@ -122,38 +122,350 @@ def score_omission_detection(questions_text: str, config: dict) -> dict:
     """
     Score how many intentional omissions the model's questions identified.
     Uses keyword matching against the answer key.
+
+    v2 matching logic (proximity + strong signals + noise filter):
+    - Each omission has "keywords" (supporting/domain words) and optional
+      "strong_signals" (topic-specific enough that a single match proves
+      engagement).
+    - If ANY strong_signal matches anywhere in the text → ASKED.
+    - Else, find all keyword match positions and cluster by proximity (250
+      chars).  A cluster needs 2+ distinct keywords AND at least one keyword
+      that is NOT a generic domain word (from the tier-level
+      "generic_domain_words" list) → ASKED.
+    - MODERATE omissions (5 pts) still match on any single keyword (low
+      false-positive cost, keeps simple omissions like "print" working).
+    - Otherwise → MISSED.
+
+    Rationale for the noise filter:
+      "What reports do purchasing managers and accounting need?" contains
+      "purchasing" and "accounting" within 25 chars — a valid proximity
+      cluster.  But both are department NAMES, not signals about role
+      permissions.  The generic_domain_words list strips these out so
+      the cluster falls below threshold.
     """
     questions_lower = questions_text.lower()
     results = []
     total_points = 0
     max_points = config["scoring"]["inquiry_omissions_max"]
 
+    PROXIMITY_WINDOW = 250  # characters — roughly one question/sentence
+    generic_words = set(w.lower() for w in config.get("generic_domain_words", []))
+
     for omission in config["omissions"]:
+        strong_signals = omission.get("strong_signals", [])
+        keywords = omission.get("keywords", [])
+        weight = omission.get("weight", "MODERATE")
+
+        # --- Pass 1: Check strong signals (any single match = ASKED) ---
+        matched_strong = None
+        for ss in strong_signals:
+            if ss.lower() in questions_lower:
+                matched_strong = ss
+                break
+
+        if matched_strong:
+            results.append({
+                "id": omission["id"],
+                "topic": omission["topic"],
+                "weight": weight,
+                "ct_category": omission.get("ct_category"),
+                "trap_type": omission.get("trap_type"),
+                "points_earned": omission["points"],
+                "points_possible": omission["points"],
+                "status": "ASKED",
+                "matched_keywords": [matched_strong],
+                "match_method": "strong_signal"
+            })
+            total_points += omission["points"]
+            continue
+
+        # --- Pass 2: Find all keyword positions ---
+        all_matches = []  # list of (position, keyword)
+        for kw in keywords:
+            pos = 0
+            kw_lower = kw.lower()
+            while True:
+                idx = questions_lower.find(kw_lower, pos)
+                if idx == -1:
+                    break
+                all_matches.append((idx, kw))
+                pos = idx + 1
+
+        # --- MODERATE omissions: any single keyword still counts ---
+        # (5-point omissions — acceptable false-positive risk, keeps
+        #  simple signal words like "print" or "report" working)
+        if weight == "MODERATE" and all_matches:
+            unique_kws = list(dict.fromkeys(kw for _, kw in all_matches))
+            results.append({
+                "id": omission["id"],
+                "topic": omission["topic"],
+                "weight": weight,
+                "ct_category": omission.get("ct_category"),
+                "trap_type": omission.get("trap_type"),
+                "points_earned": omission["points"],
+                "points_possible": omission["points"],
+                "status": "ASKED",
+                "matched_keywords": unique_kws,
+                "match_method": "single_keyword_moderate"
+            })
+            total_points += omission["points"]
+            continue
+
+        # --- HIGH/CRITICAL omissions: require 2+ keywords in proximity ---
         matched = False
         matched_keywords = []
-        for kw in omission["keywords"]:
-            if kw.lower() in questions_lower:
-                matched = True
-                matched_keywords.append(kw)
+        if all_matches:
+            # Sort by position
+            all_matches.sort(key=lambda x: x[0])
+            # Sliding window: for each match, build a cluster of nearby matches
+            for i in range(len(all_matches)):
+                cluster_kws = {all_matches[i][1]}
+                for j in range(i + 1, len(all_matches)):
+                    if all_matches[j][0] - all_matches[i][0] <= PROXIMITY_WINDOW:
+                        cluster_kws.add(all_matches[j][1])
+                    else:
+                        break
+                if len(cluster_kws) >= 2:
+                    # Noise filter: at least one keyword must NOT be generic
+                    specific_kws = [kw for kw in cluster_kws
+                                    if kw.lower() not in generic_words]
+                    if specific_kws:
+                        matched = True
+                        matched_keywords = list(cluster_kws)
+                        break
 
         status = "ASKED" if matched else "MISSED"
         points = omission["points"] if matched else 0
         total_points += points
 
-        results.append({
+        result_entry = {
             "id": omission["id"],
             "topic": omission["topic"],
-            "weight": omission["weight"],
+            "weight": weight,
+            "ct_category": omission.get("ct_category"),
+            "trap_type": omission.get("trap_type"),
             "points_earned": points,
             "points_possible": omission["points"],
             "status": status,
-            "matched_keywords": matched_keywords if matched else None
-        })
+            "matched_keywords": matched_keywords if matched else None,
+        }
+        if matched:
+            result_entry["match_method"] = "proximity_cluster"
+        results.append(result_entry)
 
     return {
         "score": total_points,
         "max": max_points,
         "details": results
+    }
+
+
+# ---------------------------------------------------------------------------
+# SCORING: Inquiry — Clarification Efficiency (CE)
+# ---------------------------------------------------------------------------
+
+def estimate_question_count(questions_text: str) -> int:
+    """
+    Estimate the number of distinct clarification questions in the text.
+    Uses multiple heuristics and returns the most reasonable count.
+    """
+    text = questions_text.strip()
+    if not text:
+        return 0
+
+    # Heuristic 1: Count question marks (most reliable for natural prose)
+    q_mark_count = text.count("?")
+
+    # Heuristic 2: Count numbered items (1. 2. 3. or 1) 2) 3))
+    numbered = re.findall(r'(?:^|\n)\s*\d+[\.\)]\s', text)
+
+    # Heuristic 3: Count bullet items that look like questions or requests
+    bullets = re.findall(r'(?:^|\n)\s*[-*•]\s+', text)
+    # Among bullets, count those that end with ? or contain question words
+    question_bullets = 0
+    for m in re.finditer(r'(?:^|\n)\s*[-*•]\s+(.+?)(?=(?:\n|$))', text, re.MULTILINE):
+        bullet_text = m.group(1).strip()
+        if bullet_text.endswith("?") or re.search(
+            r'\b(what|how|which|who|when|where|why|can|could|should|would|is|are|do|does)\b',
+            bullet_text, re.IGNORECASE
+        ):
+            question_bullets += 1
+
+    # Pick the best estimate:
+    # If there are numbered items, they're usually the most reliable count
+    if len(numbered) >= 3:
+        return len(numbered)
+    # If question marks are abundant, use that
+    if q_mark_count >= 3:
+        return q_mark_count
+    # Fall back to bullet-based count if available
+    if question_bullets >= 3:
+        return question_bullets
+    # Use the maximum of available signals
+    return max(q_mark_count, len(numbered), question_bullets, 1)
+
+
+def score_clarification_efficiency(questions_text: str, omission_results: list[dict]) -> dict:
+    """
+    Score Clarification Efficiency (CE): what fraction of the model's
+    questions were actually about meaningful omissions?
+
+    CE = omissions_asked / total_questions_estimated
+
+    A senior engineer asks 7 tight questions that all hit real gaps.
+    A junior asks 20 scattershot questions and happens to hit the same gaps.
+    Both may have the same omission score, but the first has much higher CE.
+
+    Returns a diagnostic ratio (not point-scored in v2.1 — reported as signal).
+    """
+    total_questions = estimate_question_count(questions_text)
+    omissions_asked = sum(1 for o in omission_results if o["status"] == "ASKED")
+    total_omissions = len(omission_results)
+
+    if total_questions > 0:
+        ce_ratio = omissions_asked / total_questions
+    else:
+        ce_ratio = 0.0
+
+    # Signal strength: how many questions were "wasted" on non-omission topics
+    wasted = total_questions - omissions_asked
+
+    return {
+        "total_questions_estimated": total_questions,
+        "omissions_asked": omissions_asked,
+        "omissions_total": total_omissions,
+        "ce_ratio": round(ce_ratio, 3),
+        "wasted_questions": wasted,
+        "signal": "tight" if ce_ratio >= 0.5 else ("moderate" if ce_ratio >= 0.25 else "scattershot"),
+    }
+
+
+# ---------------------------------------------------------------------------
+# SCORING: Inquiry — Premature Execution Proofing (PEP)
+# ---------------------------------------------------------------------------
+
+PEP_SIGNALS = [
+    # Code blocks with language identifiers
+    (r'```\w+', "code_block"),
+    # SQL/schema definitions
+    (r'\bCREATE\s+TABLE\b', "schema_definition"),
+    (r'\bALTER\s+TABLE\b', "schema_definition"),
+    (r'\bCREATE\s+INDEX\b', "schema_definition"),
+    # TypeScript/interface definitions
+    (r'\b(?:interface|type|enum)\s+\w+\s*\{', "type_definition"),
+    # Architecture decision language
+    (r'(?:I\'ll|I will|we should|we\'ll|we will)\s+(?:use|build|implement|go with|choose|adopt)',
+     "architecture_decision"),
+    (r'(?:going to|planning to)\s+(?:use|build|implement|go with|start)',
+     "architecture_decision"),
+    # Implementation plan language
+    (r'(?:here(?:\'s| is) my (?:plan|approach|proposal|design))', "implementation_plan"),
+    (r'(?:my (?:architecture|design|approach|plan) (?:will be|is|would be))', "implementation_plan"),
+    # File structure listings
+    (r'(?:src/|lib/|app/|components/|pages/|routes/)\s*\n', "file_structure"),
+    # Tech stack commitments
+    (r'(?:tech stack|technology stack|stack:)\s*[:\n]', "tech_stack_commitment"),
+]
+
+
+def check_premature_execution(questions_text: str) -> dict:
+    """
+    Check for Premature Execution (PEP) signals in the ASK-phase output.
+
+    A model that asks clarification questions should NOT simultaneously be:
+    - Writing code or schemas
+    - Committing to architecture decisions
+    - Laying out file structures
+    - Making tech stack commitments
+
+    This is a RESTRAINT signal — senior engineers know to gather requirements
+    before designing. It's scored as a diagnostic (not point-deducted in v2.1)
+    because the one-shot rule already constrains this, and we want to observe
+    the signal across multiple models before calibrating a penalty.
+
+    Returns: detected (bool), signals_found (list), severity (low/medium/high)
+    """
+    signals_found = []
+    for pattern, label in PEP_SIGNALS:
+        matches = re.findall(pattern, questions_text, re.IGNORECASE)
+        if matches:
+            signals_found.append({
+                "type": label,
+                "pattern": pattern[:60],
+                "count": len(matches),
+            })
+
+    # Classify severity
+    signal_types = set(s["type"] for s in signals_found)
+    if any(t in ("code_block", "schema_definition") for t in signal_types):
+        severity = "high"
+    elif any(t in ("type_definition", "architecture_decision", "implementation_plan")
+             for t in signal_types):
+        severity = "medium"
+    elif signal_types:
+        severity = "low"
+    else:
+        severity = "none"
+
+    return {
+        "detected": len(signals_found) > 0,
+        "severity": severity,
+        "signals": signals_found,
+    }
+
+
+# ---------------------------------------------------------------------------
+# SCORING: Inquiry — CT Category Analysis
+# ---------------------------------------------------------------------------
+
+def analyze_ct_categories(omission_results: list[dict], config: dict) -> dict:
+    """
+    Analyze omission detection results by Clarification Threshold (CT) category.
+
+    Instead of just reporting "% caught," this reports WHAT KIND of judgment
+    gap the model has. A junior who misses a Functional gap is different from
+    one who misses a Compliance gap — same score, different diagnosis.
+
+    Categories: Functional, Security, Compliance, Legal, Architecture-changing
+    Also breaks down by trap_type: Original, Operational Trap, Training Data Trap
+    """
+    ct_breakdown = {}      # category -> {asked, missed, points_earned, points_possible}
+    trap_breakdown = {}    # trap_type -> {asked, missed, points_earned, points_possible}
+
+    for result in omission_results:
+        # Find the original omission config to get ct_category and trap_type
+        omission_cfg = next(
+            (o for o in config["omissions"] if o["id"] == result["id"]), None
+        )
+        if not omission_cfg:
+            continue
+
+        ct = omission_cfg.get("ct_category", "Unknown")
+        trap = omission_cfg.get("trap_type", "Unknown")
+
+        for breakdown, key in [(ct_breakdown, ct), (trap_breakdown, trap)]:
+            if key not in breakdown:
+                breakdown[key] = {
+                    "asked": 0, "missed": 0,
+                    "points_earned": 0, "points_possible": 0,
+                    "omissions": [],
+                }
+            bucket = breakdown[key]
+            if result["status"] == "ASKED":
+                bucket["asked"] += 1
+            else:
+                bucket["missed"] += 1
+            bucket["points_earned"] += result["points_earned"]
+            bucket["points_possible"] += result["points_possible"]
+            bucket["omissions"].append({
+                "id": result["id"],
+                "topic": result["topic"],
+                "status": result["status"],
+            })
+
+    return {
+        "by_ct_category": ct_breakdown,
+        "by_trap_type": trap_breakdown,
     }
 
 
@@ -932,7 +1244,10 @@ def score_documentation(deliverables_dir: Path, config: dict) -> dict:
 def generate_report(tier_config: dict, inquiry_omissions: dict,
                     inquiry_quality: dict, deliverables: dict,
                     assumptions: dict, architecture: dict,
-                    security: dict, documentation: dict) -> dict:
+                    security: dict, documentation: dict,
+                    clarification_efficiency: dict = None,
+                    premature_execution: dict = None,
+                    ct_analysis: dict = None) -> dict:
     """Generate the full evaluation report."""
     scoring = tier_config["scoring"]
     max_total = tier_config["max_total_score"]
@@ -965,9 +1280,19 @@ def generate_report(tier_config: dict, inquiry_omissions: dict,
     else:
         grade = "F"
 
-    return {
+    # Build v2.1 diagnostic signals (not point-scored)
+    diagnostics = {}
+    if clarification_efficiency:
+        diagnostics["clarification_efficiency"] = clarification_efficiency
+    if premature_execution:
+        diagnostics["premature_execution"] = premature_execution
+    if ct_analysis:
+        diagnostics["ct_category_analysis"] = ct_analysis
+
+    report = {
         "tier": tier_config["tier"],
         "tier_name": tier_config["name"],
+        "engine_version": "v2.1",
         "timestamp": datetime.now().isoformat(),
         "scores": {
             "inquiry_omissions": inquiry_omissions,
@@ -989,6 +1314,10 @@ def generate_report(tier_config: dict, inquiry_omissions: dict,
             "grade": grade
         }
     }
+    if diagnostics:
+        report["diagnostics"] = diagnostics
+
+    return report
 
 
 def print_report(report: dict):
@@ -1006,7 +1335,9 @@ def print_report(report: dict):
     print(f"  Omission Detection: {s['inquiry_omissions']['score']}/{s['inquiry_omissions']['max']}")
     for d in s["inquiry_omissions"]["details"]:
         status_icon = "+" if d["status"] == "ASKED" else "x"
-        print(f"    [{status_icon}] {d['topic']} ({d['weight']}): "
+        ct_tag = f" [{d.get('ct_category', '?')}]" if d.get('ct_category') else ""
+        trap_tag = f" <{d.get('trap_type', '?')}>" if d.get('trap_type') and d.get('trap_type') != 'Original' else ""
+        print(f"    [{status_icon}] {d['topic']} ({d['weight']}){ct_tag}{trap_tag}: "
               f"{d['points_earned']}/{d['points_possible']} — {d['status']}")
     print(f"  Question Quality: {s['inquiry_quality']['score']}/{s['inquiry_quality']['max']}")
     for key, val in s["inquiry_quality"]["details"].items():
@@ -1015,6 +1346,43 @@ def print_report(report: dict):
         note = val.get("note", "")
         print(f"    {key}: {pts}/{mx} {note}")
     print(f"  INQUIRY TOTAL: {s['inquiry_total']['score']}/{s['inquiry_total']['max']}")
+
+    # v2.1 Diagnostics
+    diag = report.get("diagnostics", {})
+    if diag:
+        print("\n--- DIAGNOSTICS (v2.1 — not point-scored) ---")
+
+        if "clarification_efficiency" in diag:
+            ce = diag["clarification_efficiency"]
+            print(f"  Clarification Efficiency (CE):")
+            print(f"    Questions estimated: {ce['total_questions_estimated']}")
+            print(f"    Omissions hit: {ce['omissions_asked']}/{ce['omissions_total']}")
+            print(f"    CE ratio: {ce['ce_ratio']} ({ce['signal']})")
+            if ce['wasted_questions'] > 0:
+                print(f"    Non-omission questions: {ce['wasted_questions']}")
+
+        if "premature_execution" in diag:
+            pep = diag["premature_execution"]
+            status = "DETECTED" if pep["detected"] else "CLEAN"
+            print(f"  Premature Execution (PEP): {status} (severity: {pep['severity']})")
+            if pep["signals"]:
+                for sig in pep["signals"]:
+                    print(f"    - {sig['type']}: {sig['count']} occurrence(s)")
+
+        if "ct_category_analysis" in diag:
+            ct = diag["ct_category_analysis"]
+            print(f"  CT Category Breakdown:")
+            for cat, bucket in ct.get("by_ct_category", {}).items():
+                pct = round((bucket["points_earned"] / bucket["points_possible"] * 100)
+                            if bucket["points_possible"] > 0 else 0, 1)
+                print(f"    {cat}: {bucket['points_earned']}/{bucket['points_possible']} "
+                      f"({pct}%) — {bucket['asked']} asked, {bucket['missed']} missed")
+            print(f"  Trap Type Breakdown:")
+            for trap, bucket in ct.get("by_trap_type", {}).items():
+                pct = round((bucket["points_earned"] / bucket["points_possible"] * 100)
+                            if bucket["points_possible"] > 0 else 0, 1)
+                print(f"    {trap}: {bucket['points_earned']}/{bucket['points_possible']} "
+                      f"({pct}%) — {bucket['asked']} asked, {bucket['missed']} missed")
 
     # Deliverables
     print("\n--- DELIVERABLES ---")
@@ -1142,10 +1510,18 @@ def main():
     security = score_security(deliverables_dir, config)
     documentation = score_documentation(deliverables_dir, config)
 
+    # v2.1 diagnostic scorers (not point-scored)
+    ce = score_clarification_efficiency(questions_text, inquiry_omissions["details"])
+    pep = check_premature_execution(questions_text)
+    ct = analyze_ct_categories(inquiry_omissions["details"], config)
+
     # Generate report
     report = generate_report(
         config, inquiry_omissions, inquiry_quality, deliverables,
-        assumptions, architecture, security, documentation
+        assumptions, architecture, security, documentation,
+        clarification_efficiency=ce,
+        premature_execution=pep,
+        ct_analysis=ct
     )
 
     # Print report

@@ -13,7 +13,7 @@ param(
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $engine = Join-Path $root "scoring_engine\scoring_engine.py"
 $questions = Join-Path $root "runs\${Model}_${Tier}_questions.txt"
-$packet = Join-Path $root "${Tier}_Job_Packet.md"
+$packet = Join-Path $root "packets\${Tier}_Job_Packet.md"
 $output = Join-Path $root "runs\${Model}_${Tier}_inquiry_score.json"
 
 if (-not (Test-Path $questions)) {

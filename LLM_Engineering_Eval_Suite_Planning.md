@@ -1,7 +1,7 @@
 # LLM Engineering Evaluation Suite — Planning Session
 
-**Status:** Build Phase
-**Date:** 2026-07-06
+**Status:** Build Phase v2
+**Date:** 2026-07-09
 
 ---
 
@@ -137,18 +137,21 @@ Each omission in the answer key has:
 
 ### S1 Omissions — LawnCare Lite (Junior Level)
 
-**Total omission points: 55**
+**Total omission points: 85** (v1: 55, +30 from v2 operational traps)
 
-Tests: basic requirements gathering, common-sense business thinking, attention to detail.
+Tests: basic requirements gathering, common-sense business thinking, attention to detail, AND whether the model thinks like a business person not just a coder.
 
-| # | Topic | Points | Weight | Thinking Category |
-|---|-------|--------|--------|-------------------|
-| 1 | Scheduling Rules — job duration, overlap, assignment, time windows | 15 | CRITICAL | Business Rules |
-| 2 | Customer Data Format — CSV columns, encoding, full vs sample | 10 | HIGH | Data Understanding |
-| 3 | Authentication & User Accounts — account creation, password reset | 10 | HIGH | Security & User Management |
-| 4 | What "Job Completion" Means — status only? Notes? Photos? Notifications? | 10 | HIGH | Workflow Definition |
-| 5 | Print Daily Schedule — what's on it? For whom? | 5 | MODERATE | Deliverable Clarity |
-| 6 | Cancellation / No-Show / Reschedule / Weather | 5 | MODERATE | Edge Cases |
+| # | Topic | Points | Weight | Thinking Category | Type |
+|---|-------|--------|--------|-------------------|------|
+| 1 | Scheduling Rules — job duration, overlap, assignment, time windows | 15 | CRITICAL | Business Rules | Original |
+| 2 | Customer Data Format — CSV columns, encoding, full vs sample | 10 | HIGH | Data Understanding | Original |
+| 3 | Authentication & User Accounts — account creation, password reset | 10 | HIGH | Security & User Management | Original |
+| 4 | What "Job Completion" Means — status only? Notes? Photos? Notifications? | 10 | HIGH | Workflow Definition | Original |
+| 5 | Print Daily Schedule — what's on it? For whom? | 5 | MODERATE | Deliverable Clarity | Original |
+| 6 | Cancellation / No-Show / Reschedule / Weather | 5 | MODERATE | Edge Cases | Original |
+| 7 | Customer Data Ownership & Portability — who owns the list if sold? | 10 | HIGH | Business Continuity | **Operational Trap** |
+| 8 | Technician Schedule Visibility — can they see each other's work? | 10 | HIGH | Operational Privacy | **Operational Trap** |
+| 9 | Daily Capacity Limits — max jobs per tech per day? | 10 | HIGH | Operational Reality | **Operational Trap** |
 
 **S1 Answer Key:**
 
@@ -180,19 +183,21 @@ Tests: basic requirements gathering, common-sense business thinking, attention t
 
 ### S2 Omissions — Warehouse Inventory Manager (Mid Level)
 
-**Total omission points: 70**
+**Total omission points: 90** (v1: 70, +20 from v2 operational traps)
 
-Tests: system design thinking, integration awareness, concurrency, multi-stakeholder consideration.
+Tests: system design thinking, integration awareness, concurrency, multi-stakeholder consideration, AND whether the model understands that software exists in a messy real-world operational context.
 
-| # | Topic | Points | Weight | Thinking Category |
-|---|-------|--------|--------|-------------------|
-| 1 | Accounting Integration — which system? Data flow? Real-time or batch? | 15 | CRITICAL | Integration Architecture |
-| 2 | Barcode Scanning — hardware? Formats? Fallback? | 10 | HIGH | Hardware Integration |
-| 3 | Inventory Tracking Method — FIFO? Lot tracking? Expiration? Bin locations? | 10 | HIGH | Domain Logic |
-| 4 | Two-Warehouse Sync & Conflict Resolution — consistency model, in-transit, locking | 15 | CRITICAL | Distributed Systems |
-| 5 | Role Permissions Granularity — what can each role DO? | 10 | HIGH | Security Design |
-| 6 | Audit Log Scope & Retention — what events? How long? Who sees it? | 5 | MODERATE | Compliance & Operations |
-| 7 | Reports — what reports? For whom? Scheduled or on-demand? | 5 | MODERATE | Requirements Elicitation |
+| # | Topic | Points | Weight | Thinking Category | Type |
+|---|-------|--------|--------|-------------------|------|
+| 1 | Accounting Integration — which system? Data flow? Real-time or batch? | 15 | CRITICAL | Integration Architecture | Original |
+| 2 | Barcode Scanning — hardware? Formats? Fallback? | 10 | HIGH | Hardware Integration | Original |
+| 3 | Inventory Tracking Method — FIFO? Lot tracking? Expiration? Bin locations? | 10 | HIGH | Domain Logic | Original |
+| 4 | Two-Warehouse Sync & Conflict Resolution — consistency model, in-transit, locking | 15 | CRITICAL | Distributed Systems | Original |
+| 5 | Role Permissions Granularity — what can each role DO? | 10 | HIGH | Security Design | Original |
+| 6 | Audit Log Scope & Retention — what events? How long? Who sees it? | 5 | MODERATE | Compliance & Operations | Original |
+| 7 | Reports — what reports? For whom? Scheduled or on-demand? | 5 | MODERATE | Requirements Elicitation | Original |
+| 8 | Shared Credentials & Account Security — stop the "log in as them" problem | 10 | HIGH | Operational Realities | **Operational Trap** |
+| 9 | Approval Workflow Reality — Tom's text approvals vs. system workflow | 10 | HIGH | Change Management | **Operational Trap** |
 
 **S2 Answer Key:**
 
@@ -228,19 +233,20 @@ Tests: system design thinking, integration awareness, concurrency, multi-stakeho
 
 ### S3 Omissions — Regional Hospital Information System (Enterprise Level)
 
-**Total omission points: 95**
+**Total omission points: 110** (v1: 95, +15 from v2 training data traps)
 
-Tests: architectural thinking, compliance awareness, migration strategy, enterprise-scale consideration.
+Tests: architectural thinking, compliance awareness, migration strategy, enterprise-scale consideration, AND whether the model can resist its training data bias when the packet says otherwise.
 
-| # | Topic | Points | Weight | Thinking Category |
-|---|-------|--------|--------|-------------------|
-| 1 | Existing Platform & Data Migration — what system? Schema? 15 years of data? | 20 | CRITICAL | Migration Architecture |
-| 2 | Phased Rollout Plan — which modules first? Parallel systems? Data reconciliation? | 15 | CRITICAL | Program Management |
-| 3 | HIPAA Compliance Specifics — BAA? Encryption standards? Breach protocol? | 15 | CRITICAL | Regulatory Compliance |
-| 4 | Multi-Hospital Data Architecture — shared patients? Tenant isolation? One record or many? | 15 | CRITICAL | Architecture |
-| 5 | Pharmacy & Lab Integrations — which systems? HL7/FHIR? Real-time or queued? | 10 | HIGH | Integration Architecture |
-| 6 | Downtime, DR, RPO/RTO — actual numbers? Failover strategy? | 10 | HIGH | Reliability Engineering |
-| 7 | Billing & Insurance — claims? ICD-10? Prior auth? Clearinghouse? | 10 | HIGH | Domain Complexity |
+| # | Topic | Points | Weight | Thinking Category | Type |
+|---|-------|--------|--------|-------------------|------|
+| 1 | Existing Platform & Data Migration — what system? Schema? 15 years of data? | 20 | CRITICAL | Migration Architecture | Original |
+| 2 | Phased Rollout Plan — which modules first? Parallel systems? Data reconciliation? | 15 | CRITICAL | Program Management | Original |
+| 3 | HIPAA Compliance Specifics — BAA? Encryption standards? Breach protocol? | 15 | CRITICAL | Regulatory Compliance | Original |
+| 4 | Multi-Hospital Data Architecture — shared patients? Tenant isolation? One record or many? | 15 | CRITICAL | Architecture | Original |
+| 5 | Pharmacy & Lab Integrations — HL7 vs FHIR? Follow existing or standardize? | 10 | HIGH | Integration Architecture | **Training Data Trap** |
+| 6 | Downtime, DR, RPO/RTO — actual numbers? Failover strategy? | 10 | HIGH | Reliability Engineering | Original |
+| 7 | Billing & Insurance — claims? ICD-10? Prior auth? Clearinghouse? | 10 | HIGH | Domain Complexity | Original |
+| 8 | Identity Provider Fragmentation — unified SSO or pluggable auth? | 15 | CRITICAL | Scope Discipline | **Training Data Trap** |
 
 **S3 Answer Key:**
 
@@ -276,13 +282,15 @@ Tests: architectural thinking, compliance awareness, migration strategy, enterpr
 
 ## Point Distribution Summary
 
-| Tier | Critical (15-20pts) | High (10pts) | Moderate (5pts) | Total Omission Points |
-|------|---------------------|--------------|-----------------|----------------------|
-| **S1** | 1 (15pts) | 3 (30pts) | 2 (10pts) | **55** |
-| **S2** | 2 (30pts) | 3 (30pts) | 2 (10pts) | **70** |
-| **S3** | 4 (65pts) | 3 (30pts) | 0 | **95** |
+| Tier | Critical (15-20pts) | High (10pts) | Moderate (5pts) | Total Omission Points | Max Score |
+|------|---------------------|--------------|-----------------|----------------------|-----------|
+| **S1** | 1 (15pts) | 6 (60pts) | 2 (10pts) | **85** | **230** |
+| **S2** | 2 (30pts) | 5 (50pts) | 2 (10pts) | **90** | **270** |
+| **S3** | 5 (80pts) | 3 (30pts) | 0 | **110** | **315** |
 
 Point scaling reflects difficulty: S1 omissions are easier to spot (lower total), S3 omissions require deep architectural thinking (higher total).
+
+v2 changes added operational traps (S1/S2) and training data traps (S3) to address the training data bias finding — see "Key Finding: Training Data Bias" section below.
 
 ---
 
@@ -364,6 +372,59 @@ The thinking patterns being tested remain identical across variants. Only the do
 
 ---
 
+## Key Finding: Training Data Bias (2026-07-09)
+
+**Discovery:** During initial testing with Gemini, we observed that it performed BETTER on S3 (enterprise hospital, 8,000 users, HIPAA, migration) than on S1 (simple lawn care app, 3 users). This was counterintuitive — S1 should be the easy one.
+
+**Root Cause:** LLMs are trained on vastly more enterprise software content than small-business operational content. GitHub, Stack Overflow, and tech blogs have thousands of articles about HIPAA compliance, FHIR integrations, and enterprise architecture. They have almost nothing about whether a lawn care technician should be able to see their coworker's schedule, or how many lawns you can mow in a day.
+
+**Implication:** Our v1 omissions were inadvertently biased toward the kind of technical questions that appear in LLM training data. S1's omissions (scheduling rules, CSV format, auth, job completion) are all standard software engineering questions. An LLM can pattern-match them from training data without actually "thinking like a business person."
+
+**The Fix (v2 — Implemented):**
+
+Two new omission types designed to test what training data CAN'T teach:
+
+### 1. Operational Traps (S1 and S2)
+
+Questions that require small-business common sense, not technical knowledge. These test whether the model thinks like a business person, not just a coder.
+
+**Design principles:**
+- The packet includes a "Business Operations" section with realistic human details (names, relationships, existing bad habits)
+- The hints are EMBEDDED in the narrative, not stated as requirements
+- A coder reads the section and moves on. A business thinker spots the implications.
+- The correct question is about PEOPLE and PROCESS, not technology
+
+**S1 Operational Traps (3 new, +30 pts):**
+- Data ownership — "Who owns the customer list if Maria sells?" (business continuity thinking)
+- Technician visibility — "Can Jake see Sam's schedule?" (operational privacy, human dynamics)
+- Daily capacity — "Is there a max number of jobs per tech?" (real-world service business experience)
+
+**S2 Operational Traps (2 new, +20 pts):**
+- Shared credentials — "The packet says workers share logins, HR wants it stopped — how?" (change management, not just auth)
+- Approval reality — "Tom approves POs by text — force everything through the system or accommodate reality?" (the #1 reason business software fails: building perfect workflows nobody follows)
+
+### 2. Training Data Traps (S3)
+
+Questions where a well-read LLM will confidently answer from training data patterns but get it WRONG because this specific project is different. The packet explicitly contains contradictory information, and the model must notice.
+
+**Design principles:**
+- The packet includes a "Business Operations" section that EXPLICITLY states a non-standard approach
+- LLM training data says "do X" — the packet says "we're doing Y instead"
+- A model that asks about it demonstrates reading comprehension + resistance to bias
+- A model that doesn't ask will confidently build the wrong thing in Architecture.md
+
+**S3 Training Data Traps (2, one modifies existing + one new, +15 pts net):**
+- FHIR trap — "Every healthcare article says use FHIR. The packet says don't replace existing integration methods. Pharmacy at Hospital A uses HL7 v2.5.1, not FHIR. The model that assumes FHIR failed to read the business context." (modified existing Omission 5)
+- SSO trap — "Every enterprise article says use unified SSO. The packet lists three different identity providers and says unification is a separate project. The model that designs a single IdP scored well on training data but failed on scope discipline." (new Omission 8, 15 pts)
+
+**Why This Matters:**
+
+These traps directly address the bias we discovered. If an LLM scores high on S1/S2 in v2, it's not because it pattern-matched technical omissions from training data — it's because it demonstrated actual business thinking. And if an LLM scores high on S3 in v2, it's not because it regurgitated healthcare IT best practices — it's because it actually read the packet and noticed where this project DEVIATES from best practices.
+
+This is the difference between testing knowledge and testing judgment.
+
+---
+
 ## Next Steps — Build Phase
 
 - [x] Finalize omissions
@@ -381,4 +442,18 @@ The thinking patterns being tested remain identical across variants. Only the do
   - Tested with both good and bad question sets — scoring differentiates correctly
   - Features: negation detection (rejecting over-engineering ≠ using it), keyword matching, accessibility scoring, anti-pattern deductions
   - CLI: `python scoring_engine.py --tier S1 --questions questions.txt --deliverables dir/ --packet packet.md`
-- [ ] Test the system against at least one real LLM
+- [x] v2: Add operational traps to S1 (+3 omissions) and S2 (+2 omissions)
+- [x] v2: Add training data traps to S3 (modify Omission 5 + new Omission 8)
+- [x] v2: Add "Business Operations" sections to all three packets
+- [x] v2: Update scoring configs and point distributions
+- [x] v2: Document training data bias finding and v2 design rationale
+- [x] v2: Fix keyword matching false positives — 3-layer matching system
+  - Problem: bare substring matching gave S2 Omission 5 (Role Permissions) full credit when "warehouse" and "accounting" appeared in unrelated sentences about barcodes and sync. Worth 10/90 points (~10%) for a topic the model never engaged with.
+  - Fix: 3-layer matching for HIGH/CRITICAL omissions:
+    1. **Strong signals** — topic-specific phrases (FIFO, BAA, RPO, "who can") where a single match anywhere = ASKED
+    2. **Proximity clustering** — 2+ keywords within 250 chars of each other = ASKED (prevents scattered incidental matches)
+    3. **Noise filter** — clusters where ALL keywords are generic domain words (warehouse, accounting, patient, schedule) are rejected. At least one specific keyword required.
+  - MODERATE omissions (5 pts): keep single-keyword matching (acceptable false-positive cost)
+  - Added `strong_signals` to every HIGH/CRITICAL omission and `generic_domain_words` to every tier config
+  - Also caught and fixed: "customer list" strong signal on S1 O7 was triggering from a CSV format question; "shared" in S2 O4 keywords conflicted with S2 O8 strong signal; "approve" in S2 O9 keywords conflicted with S2 O5 strong signal
+- [ ] Test v2 against multiple LLMs (inquiry round comparison)

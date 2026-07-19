@@ -1,7 +1,11 @@
-# Temp extract of nested zip — not source of truth
+# Temp extracts
 _zip_check/
+_extract*/
 
 # OS junk
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# Local scratch
+*.tmp

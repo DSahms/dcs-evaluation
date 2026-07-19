@@ -1,0 +1,3 @@
+What framework should I use?
+Should I use TypeScript or JavaScript?
+What database would be best?

@@ -1,0 +1,7 @@
+1. What barcode scanning hardware will warehouse workers use?
+
+2. How should the two warehouses stay in sync?
+
+3. What specific permissions should each role have? For example, can warehouse staff adjust quantities, or can accounting approve purchase orders?
+
+4. What reports do purchasing and accounting need?

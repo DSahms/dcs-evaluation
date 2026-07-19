@@ -1,6 +1,9 @@
 # Model Testing — Quick Run Guide
 
+**Repo:** [DSahms/dcs-evaluation](https://github.com/DSahms/dcs-evaluation) · **Suite:** v2.1  
 **Folder:** `D:\DCS benchmark\evaluation\`
+
+This is an **evaluation suite**, not a benchmark leaderboard.
 
 ---
 
@@ -21,8 +24,8 @@
 
 Paste **both** files in order:
 
-1. `Phase1_Evaluation_Prompt.md`
-2. `S1_Job_Packet.md` (or S2/S3)
+1. `packets/Phase1_Evaluation_Prompt.md`
+2. `packets/S1_Job_Packet.md` (or S2/S3)
 
 Say: *"Submit your one round of clarification questions only. Do not build yet."*
 
@@ -50,7 +53,7 @@ python scoring_engine\scoring_engine.py `
   --tier S1 `
   --questions runs\claude_sonnet_s1_questions.txt `
   --deliverables runs\_empty `
-  --packet S1_Job_Packet.md `
+  --packet packets\S1_Job_Packet.md `
   --output runs\claude_sonnet_s1_inquiry_score.json
 ```
 
@@ -67,8 +70,8 @@ python scoring_engine\scoring_engine.py `
 ## Full run (Cursor agent)
 
 1. **Fresh chat** — pick model from dropdown **first**
-2. Paste `Phase1_Evaluation_Prompt.md` + packet
-3. Model asks → you answer from `S1_Answer_Key.md` (do NOT show them the key file)
+2. Paste `packets/Phase1_Evaluation_Prompt.md` + packet
+3. Model asks → you answer from `packets/S1_Answer_Key.md` (do NOT show them the key file)
 4. Model builds one shot into folder: `runs/<model>_s1_build/`
 5. Score:
 
@@ -90,11 +93,11 @@ python scoring_engine\scoring_engine.py `
 
 ## Oracle answers (S1)
 
-When they ask, respond from `S1_Answer_Key.md` only. Same answers for every model.
+When they ask, respond from `packets/S1_Answer_Key.md` only. Same answers for every model.
 
 ---
 
-## Suggested order tonight
+## Suggested order
 
 1. **Claude Sonnet** — ASK only → score → compare to Gemini
 2. **Codex or Composer** — ASK only

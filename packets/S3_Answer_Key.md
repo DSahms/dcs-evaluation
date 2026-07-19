@@ -50,16 +50,16 @@
 | **Keywords** | `multi`, `hospital`, `tenant`, `shared`, `unified`, `centralized`, `distributed`, `separate`, `one record`, `single`, `isolation`, `patient population`, `facility`, `across`, `cross-facility` |
 | **Answer** | One unified medical record per patient across all hospitals. Patient visits Hospital A for a procedure, then goes to Hospital B for follow-up — Hospital B clinician sees the full history. Centralized database with hospital-specific access controls. A clinician at Hospital A cannot see patients admitted only to Hospital B unless there's a specific care coordination reason (requires separate access grant). |
 
-### Omission 5: Pharmacy & Laboratory Integrations
+### Omission 5: Pharmacy & Laboratory Integrations *(Training Data Trap)*
 | Field | Value |
 |-------|-------|
-| **What's missing** | Whether pharmacy/lab are built in-house or integrations with external systems, which systems, what protocols |
-| **Why omitted** | PMs list pharmacy and lab as features. Engineers know they're almost always integrations with existing systems. |
-| **Thinking category** | Integration Architecture |
+| **What's missing** | Whether pharmacy/lab are built in-house or integrations with external systems, which systems, what protocols — AND critically, whether to use "modern" protocols or follow what already works |
+| **Why omitted** | PMs list pharmacy and lab as features. Engineers know they're almost always integrations with existing systems. BUT the TRAP: the packet explicitly says "minimize disruption to existing operational patterns" and "don't replace the integration method just to standardize on a newer protocol." An LLM trained on healthcare IT content will confidently assume FHIR R4 for everything because every healthcare IT blog says FHIR is the future. The correct engineering question is: "The packet mentions minimizing disruption — should we follow each hospital's existing integration methods, or standardize on new protocols?" |
+| **Thinking category** | Integration Architecture + Training Data Bias Detection |
 | **Weight** | HIGH |
 | **Points** | 10 |
-| **Keywords** | `pharmacy`, `lab`, `laboratory`, `Epic`, `Sunquest`, `HL7`, `FHIR`, `NCPDP`, `e-prescribe`, `integration`, `external`, `LIS`, `protocol`, `real-time`, `which system`, `existing` |
-| **Answer** | Pharmacy: integrate with Epic Pharmacy (their existing system) via FHIR R4 for e-prescribing, drug interaction checking, and medication history. Lab: integrate with Sunquest LIS via HL7 v2.5.1 for order entry and results retrieval. Both integrations must support real-time (under 3 seconds) and queued/fallback modes. |
+| **Keywords** | `pharmacy`, `lab`, `laboratory`, `Epic`, `Sunquest`, `HL7`, `FHIR`, `NCPDP`, `e-prescribe`, `integration`, `external`, `LIS`, `protocol`, `real-time`, `which system`, `existing`, `disruption`, `current method`, `standardize`, `existing pattern` |
+| **Answer** | **THIS IS THE TRAP.** Pharmacy: the existing Epic Pharmacy system at Hospital A uses HL7 v2.5.1 (NOT FHIR) for its current integration with the old patient management system. The pharmacy-interface-spec.pdf describes this HL7-based interface. You should use HL7 v2.5.1 for the pharmacy integration, NOT FHIR. Hospital B's pharmacy uses a different system (Cerner) with an FHIR R4 interface — so the new system needs to support BOTH HL7 v2.5.1 and FHIR R4 depending on the hospital. Lab: integrate with Sunquest LIS via HL7 v2.5.1 for order entry and results retrieval (this is NOT a trap — HL7 v2.x is still standard for LIS). Both integrations must support real-time (under 3 seconds) and queued/fallback modes. **An LLM that assumes FHIR for everything failed to read the business context.** |
 
 ### Omission 6: Downtime, DR, and RPO/RTO
 | Field | Value |
@@ -82,6 +82,17 @@
 | **Points** | 10 |
 | **Keywords** | `billing`, `insurance`, `claim`, `ICD-10`, `CPT`, `prior authorization`, `denial`, `payment`, `revenue`, `coding`, `clearinghouse`, `self-pay`, `revenue cycle`, `charge`, `copay` |
 | **Answer** | Full revenue cycle: charge capture → coding (ICD-10, CPT) → claims submission → payment posting → denial management. Integrate with Waystar clearinghouse for claims. Self-pay patients get paper statements. Payment plans: up to 6 months for balances over $500. For v1, prior authorization is manual (paper/fax) — automated prior auth is v2. |
+
+### Omission 8: Identity Provider Fragmentation *(Training Data Trap)*
+| Field | Value |
+|-------|-------|
+| **What's missing** | Whether there's a single identity provider across all hospitals, how to handle three different identity systems during migration, whether the new system needs to federate or if each hospital keeps its own login |
+| **Why omitted** | The packet drops a massive hint by listing three different identity systems (AD, Okta, local LDAP) and saying "identity unification is a separate initiative." THE TRAP: every healthcare IT article and every LLM's training data says "enterprise = SSO/Active Directory/federated identity." The model that confidently designs a single SSO solution failed to read the explicit constraint that identity unification is OUT OF SCOPE. The correct question recognizes the fragmentation and asks how to handle it without trying to fix it. |
+| **Thinking category** | Scope Discipline + Training Data Bias Detection |
+| **Weight** | CRITICAL |
+| **Points** | 15 |
+| **Keywords** | `identity`, `login`, `SSO`, `single sign`, `AD`, `Active Directory`, `Okta`, `LDAP`, `federat`, `auth`, `different`, `hospital`, `each`, `separate`, `unify`, `unification`, `fragment`, `multiple provider`, `one`, `same` |
+| **Answer** | **THIS IS THE TRAP.** Do NOT design a unified SSO solution. Each hospital keeps its existing identity provider for v1. The new system must support pluggable authentication: Hospital A authenticates via AD, Hospital B via Okta (SAML/OIDC), Hospital C via their local LDAP. The user record in the new system links to the hospital's identity provider, not to a single centralized identity. Identity unification (moving everyone to one provider) is explicitly a SEPARATE future project — the CIO said so. Building a unified identity layer now would be over-engineering and out of scope. **An LLM that designs enterprise SSO with a single IdP scored well on training data but failed on reading comprehension.** |
 
 ---
 

@@ -69,12 +69,18 @@ All users access the application through a web browser.
 - ASSUMPTIONS.md documenting any assumptions made
 - Build instructions
 
-## 9. Provided Assets
+## 9. Business Operations
+
+GreenThumb is a small but real business. The owner, Maria, has been running it for 4 years and plans to keep growing. She mentioned she might sell the business in a few years if the right offer comes along.
+
+The two technicians, Jake and Sam, have been with the company since the beginning. Maria trusts them but wants to make sure the system doesn't create unnecessary friction or expose information that shouldn't be shared.
+
+## 10. Provided Assets
 
 - Company logo (file: greenthumb-logo.png)
 - UI mockups (files: mockup-desktop.png, mockup-mobile.png)
 - Sample customer data (file: customers.csv)
 
-## 10. Clarification
+## 11. Clarification
 
 You have **one round** of clarification questions. Submit all questions together. After receiving answers, requirements are frozen.

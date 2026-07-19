@@ -74,12 +74,18 @@ Approximately 150 users across three departments:
 - ASSUMPTIONS.md documenting any assumptions made
 - Build instructions
 
-## 9. Provided Assets
+## 9. Business Operations
+
+Valley Distribution has grown fast — from 12 people three years ago to 150 today. With that growth came operational realities that don't fit neatly into software specs. The purchasing manager, Tom, has been known to approve purchase orders by text message when he's walking the warehouse floor. The night shift supervisor doesn't have a company email address. Two warehouse workers are husband and wife, and there have been complaints about one accessing the other's timesheets.
+
+When someone calls out sick, the shift supervisor typically just tells another worker to "log in as them" to keep things moving. HR has told them to stop doing this, but the old Excel system didn't have any way to prevent it.
+
+## 10. Provided Assets
 
 - Wireframes for main screens (files: wireframe-dashboard.png, wireframe-inventory.png, wireframe-transfer.png, wireframe-reports.png)
 - Sample inventory data (file: sample-inventory.csv)
 - Accounting system API documentation (file: accounting-api-docs.pdf)
 
-## 10. Clarification
+## 11. Clarification
 
 You have **one round** of clarification questions. Submit all questions together. After receiving answers, requirements are frozen.

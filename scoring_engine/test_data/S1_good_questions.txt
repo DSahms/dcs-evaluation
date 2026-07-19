@@ -1,0 +1,11 @@
+1. How long are typical lawn care jobs, and can a technician have overlapping appointments?
+
+2. The packet mentions a sample customer CSV — what columns does it contain, and is this the full customer list or just a sample?
+
+3. How should user accounts be created? Can users register themselves, or does the office manager create them? What about password resets?
+
+4. What does "job completion" involve — just a status change, or should technicians be able to add notes or photos?
+
+5. You mention "print daily schedule" — what information should be on the printout, and who prints it?
+
+6. What happens if a customer cancels, no-shows, or if weather prevents work?

@@ -89,13 +89,19 @@ Approximately 8,000 users across multiple hospital facilities, including:
 - ASSUMPTIONS.md documenting any assumptions made
 - Build instructions
 
-## 9. Provided Assets
+## 9. Business Operations
+
+Regional Health Partners has grown through acquisition. Each hospital that joined the network had its own existing IT infrastructure, identity systems, and vendor contracts. While RHP leadership wants a unified platform long-term, they have been explicit with the IT team: minimize disruption to existing operational patterns during this migration. If a hospital's pharmacy system works fine with its current integration method, don't replace the integration method just to standardize on a newer protocol.
+
+The identity management situation is particularly fragmented. Hospital A uses Microsoft Active Directory. Hospital B uses Okta. Hospital C still uses a local LDAP server that their previous IT director set up. The CIO has mentioned wanting to move everyone to a single identity provider eventually, but for this project, the priority is getting the new patient management system live — identity unification is a separate initiative.
+
+## 10. Provided Assets
 
 - Wireframes for core screens (files: wireframe-registration.png, wireframe-schedule.png, wireframe-clinical.png, wireframe-billing.png)
 - Interface specifications for existing pharmacy system (file: pharmacy-interface-spec.pdf)
 - Interface specifications for existing laboratory system (file: lab-interface-spec.pdf)
 - Sample datasets (files: sample-patients.csv, sample-orders.csv)
 
-## 10. Clarification
+## 11. Clarification
 
 You have **one round** of clarification questions. Submit all questions together. After receiving answers, requirements are frozen.
