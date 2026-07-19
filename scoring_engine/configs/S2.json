@@ -1,0 +1,119 @@
+{
+  "tier": "S2",
+  "name": "Warehouse Inventory Manager",
+  "max_total_score": 250,
+  "scoring": {
+    "inquiry_omissions_max": 70,
+    "inquiry_quality_max": 25,
+    "deliverables_files_max": 35,
+    "deliverables_requirements_max": 20,
+    "engineering_assumptions_max": 20,
+    "engineering_architecture_max": 31,
+    "engineering_security_max": 10,
+    "engineering_tradeoffs_bonus": 4,
+    "engineering_assumptions_relevance_bonus": 3,
+    "engineering_assumptions_edge_case_bonus": 2,
+    "documentation_max": 35
+  },
+  "required_files": [
+    {"name": "Architecture.md", "points": 5},
+    {"name": "ASSUMPTIONS.md", "points": 5},
+    {"name": "README.md", "points": 5},
+    {"name": "Source code", "points": 10, "check": "has_code_files"},
+    {"name": "Tests", "points": 5, "check": "has_test_files"},
+    {"name": "Deployment guide", "points": 5, "check": "has_deployment_guide"},
+    {"name": "Build instructions", "points": 5, "check": "has_build_instructions"}
+  ],
+  "functional_requirements": [
+    {"name": "Inventory management", "points": 4, "keywords": ["inventory", "stock", "quantity", "count", "level", "low stock", "alert"]},
+    {"name": "Transfers between warehouses", "points": 4, "keywords": ["transfer", "move", "ship", "between warehouse", "location", "in transit"]},
+    {"name": "Barcode scanning", "points": 3, "keywords": ["barcode", "scan", "scanner", "Zebra", "receive", "pick"]},
+    {"name": "Audit log", "points": 3, "keywords": ["audit", "log", "trail", "activity", "history", "track"]},
+    {"name": "Reports", "points": 3, "keywords": ["report", "export", "CSV", "PDF", "dashboard", "valuation", "cost of goods"]},
+    {"name": "Permissions/role-based access", "points": 3, "keywords": ["permission", "role", "access", "RBAC", "authorize", "privilege"]}
+  ],
+  "security_requirements": [
+    {"name": "Role-based access control", "points": 4, "keywords": ["role", "permission", "access control", "RBAC", "authorize", "polic", "privilege"]},
+    {"name": "Encrypted transport", "points": 3, "keywords": ["HTTPS", "TLS", "SSL", "encrypt", "transport", "certificate"]},
+    {"name": "Audit logging", "points": 3, "keywords": ["audit", "log", "trail", "activity", "append", "immutable"]}
+  ],
+  "over_engineering_signals": [
+    "microservice", "event sourcing", "CQRS", "service mesh", "api gateway",
+    "kafka", "rabbitmq", "grpc", "docker swarm", "blockchain",
+    "custom rpc", "event bus", "saga pattern", "domain event",
+    "20 service", "microservice architecture"
+  ],
+  "under_engineering_signals": [
+    "SQLite", "flat file", "no auth", "no permission", "no role",
+    "no error handl", "single server", "no concurrent", "spreadsheet",
+    "excel", "global variable"
+  ],
+  "omissions": [
+    {
+      "id": 1,
+      "topic": "Accounting Integration Details",
+      "weight": "CRITICAL",
+      "points": 15,
+      "keywords": ["accounting", "QuickBooks", "integrate", "sync", "real-time", "batch", "flow", "financial", "discrepancy", "which system", "what data", "direction", "reconcil"],
+      "answer": "QuickBooks Online. Inventory counts and values sync to QBO nightly (batch). Purchase orders created in our system push to QBO. If there's a discrepancy, the warehouse system is the source of truth for quantities, QBO is source of truth for financial values."
+    },
+    {
+      "id": 2,
+      "topic": "Barcode Scanning Implementation",
+      "weight": "HIGH",
+      "points": 10,
+      "keywords": ["barcode", "scanner", "hardware", "scan", "mobile", "Zebra", "format", "UPC", "Code 128", "QR", "fail", "manual", "device", "handheld"],
+      "answer": "Workers will use Zebra MC3300 handheld scanners (Android-based, WiFi). Code 128 barcodes on existing inventory labels. If scan fails, worker can manually enter the barcode number. All scanners are on the warehouse WiFi network."
+    },
+    {
+      "id": 3,
+      "topic": "Inventory Tracking Method",
+      "weight": "HIGH",
+      "points": 10,
+      "keywords": ["track", "FIFO", "LIFO", "lot", "expiration", "serial", "bin", "location", "shelf", "method", "how", "manage", "stock"],
+      "answer": "Lot tracking with FIFO. Each lot has: lot_number, received_date, expiration_date (if applicable), quantity, bin_location. FIFO is enforced at picking time — oldest lot picked first. No serial number tracking needed."
+    },
+    {
+      "id": 4,
+      "topic": "Two-Warehouse Sync & Conflict Resolution",
+      "weight": "CRITICAL",
+      "points": 15,
+      "keywords": ["sync", "real-time", "consistency", "latency", "transfer", "transit", "simultaneous", "conflict", "lock", "distributed", "VPN", "database", "shared", "repli"],
+      "answer": "Real-time sync via a shared database (single database server, both warehouses connect over VPN). Transfer status: pending → in_transit → received. While in_transit, quantity is deducted from source but not added to destination. Expected latency between warehouses is under 500ms. Simultaneous transfers are handled by database row locking — first one wins, second gets an error to retry."
+    },
+    {
+      "id": 5,
+      "topic": "Role Permissions Granularity",
+      "weight": "HIGH",
+      "points": 10,
+      "keywords": ["permission", "role", "access", "approve", "create", "edit", "delete", "modify", "purchasing", "warehouse", "accounting", "granular", "who can", "what can"],
+      "answer": "Purchasing: create/edit/cancel POs, view inventory, request approval. Warehouse: receive shipments, adjust quantities (with reason), pick/pack, transfer. Accounting: view all, adjust financial values, approve/reject POs over $5,000. POs under $5,000 are auto-approved. No one can approve their own PO."
+    },
+    {
+      "id": 6,
+      "topic": "Audit Log Scope & Retention",
+      "weight": "MODERATE",
+      "points": 5,
+      "keywords": ["audit", "log", "retain", "export", "event", "who", "access", "history", "append", "how long", "what events", "view"],
+      "answer": "Log: all CRUD operations on inventory, all transfers, all user login/logout, all permission changes, all quantity adjustments (with before/after values). Retain for 7 years. Purchasing managers and accounting can view. Exportable as CSV. Append-only — no deletion or modification."
+    },
+    {
+      "id": 7,
+      "topic": "Reports — What Reports?",
+      "weight": "MODERATE",
+      "points": 5,
+      "keywords": ["report", "reports", "scheduled", "on-demand", "export", "dashboard", "alert", "stock", "valuation", "what report", "which", "type", "format"],
+      "answer": "On-demand reports for purchasing managers: current stock levels, low stock alerts, transfer history, receiving history. For accounting: inventory valuation report, cost of goods report. All exportable to CSV and PDF. No scheduled/automated reports for v1."
+    }
+  ],
+  "packet_requestion_patterns": [
+    {"pattern": "what is the project|what am I building", "section": "Section 1 (Project Overview)"},
+    {"pattern": "how many user", "section": "Section 3 (Users)"},
+    {"pattern": "what (are|is) the (functional )?requirement", "section": "Section 4 (Functional Requirements)"},
+    {"pattern": "what (should|do) I (deliver|submit|produce)", "section": "Section 8 (Deliverables)"},
+    {"pattern": "what (assets|files) (do I have|are provided|were provided)", "section": "Section 9 (Provided Assets)"},
+    {"pattern": "is this a web (app|application)", "section": "Section 6 (Technical Constraints)"}
+  ],
+  "no_questions_penalty": -10,
+  "requestion_penalty": -2
+}

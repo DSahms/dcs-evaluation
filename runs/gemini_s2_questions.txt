@@ -1,0 +1,25 @@
+Clarification Questions - Gemini S2 Run (2026-07-08)
+
+WAREHOUSE OPERATIONS & LOGISTICS
+
+Location Tracking: Does the system need to track inventory down to the specific aisle/rack/bin level within each warehouse, or is tracking quantities at the general warehouse level sufficient for this phase?
+
+Inventory Lifecycle: Are there requirements for lot tracking, serial numbers, or expiration dates? Furthermore, does the system need to enforce a specific picking strategy (e.g., FIFO, LIFO)?
+
+Transfer States: When inventory is moved between the two locations, does it need to exist in an "in-transit" state, or is the deduction from one warehouse and addition to the other handled instantaneously upon dispatch?
+
+Reconciliation & Counting: For inventory counts, will the operations team be conducting rolling cycle counts while the system is live, or will counts be restricted to full physical inventory audits where warehouse operations are temporarily paused?
+
+TECHNICAL INTEGRATION & USER INTERFACE
+
+Barcode Hardware & UI: Given the constraint of a web application, will warehouse staff be using mobile devices (e.g., Android-based Zebra scanners) requiring a responsive mobile web interface, or will they be using tethered USB/Bluetooth scanners at fixed workstations?
+
+Accounting Synchronization: Regarding the accounting-api-docs.pdf integration, is the requirement for real-time, event-driven synchronization for every transaction, or a scheduled batch process (e.g., end-of-day or hourly sync)?
+
+Data Volume: To optimize database indexing and performance, what is the approximate number of active SKUs and the anticipated daily transaction volume (receivings, transfers, shipments)?
+
+INFRASTRUCTURE & DEPLOYMENT
+
+Cloud Hosting: As the system must be cloud-ready, does Valley Distribution Co. have a preferred cloud provider (e.g., AWS, Azure, GCP) or an existing CI/CD infrastructure that the deployment guide and build instructions should target?
+
+Authentication: For the 150 users, should the system include a standalone authentication database, or does it need to integrate with an existing corporate identity provider (e.g., Active Directory / SAML / OAuth)?

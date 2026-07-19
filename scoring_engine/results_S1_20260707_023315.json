@@ -1,0 +1,274 @@
+{
+  "tier": "S1",
+  "tier_name": "LawnCare Lite",
+  "timestamp": "2026-07-07T02:33:15.406017",
+  "scores": {
+    "inquiry_omissions": {
+      "score": 50,
+      "max": 55,
+      "details": [
+        {
+          "id": 1,
+          "topic": "Scheduling Rules",
+          "weight": "CRITICAL",
+          "points_earned": 15,
+          "points_possible": 15,
+          "status": "ASKED",
+          "matched_keywords": [
+            "duration",
+            "assign",
+            "slot"
+          ]
+        },
+        {
+          "id": 2,
+          "topic": "Customer Data Format",
+          "weight": "HIGH",
+          "points_earned": 10,
+          "points_possible": 10,
+          "status": "ASKED",
+          "matched_keywords": [
+            "format",
+            "fields",
+            "data",
+            "full",
+            "structure"
+          ]
+        },
+        {
+          "id": 3,
+          "topic": "Authentication & User Accounts",
+          "weight": "HIGH",
+          "points_earned": 10,
+          "points_possible": 10,
+          "status": "ASKED",
+          "matched_keywords": [
+            "account",
+            "password",
+            "user"
+          ]
+        },
+        {
+          "id": 4,
+          "topic": "Job Completion Details",
+          "weight": "HIGH",
+          "points_earned": 10,
+          "points_possible": 10,
+          "status": "ASKED",
+          "matched_keywords": [
+            "complete",
+            "completion",
+            "status",
+            "notes"
+          ]
+        },
+        {
+          "id": 5,
+          "topic": "Print Daily Schedule Content",
+          "weight": "MODERATE",
+          "points_earned": 5,
+          "points_possible": 5,
+          "status": "ASKED",
+          "matched_keywords": [
+            "daily",
+            "information",
+            "address"
+          ]
+        },
+        {
+          "id": 6,
+          "topic": "Cancellation / No-Show / Reschedule / Weather",
+          "weight": "MODERATE",
+          "points_earned": 0,
+          "points_possible": 5,
+          "status": "MISSED",
+          "matched_keywords": null
+        }
+      ]
+    },
+    "inquiry_quality": {
+      "score": 14,
+      "max": 20,
+      "raw_total": 14,
+      "details": {
+        "batch_submission": {
+          "points": 3,
+          "max": 3,
+          "note": "Assumed single submission"
+        },
+        "clear_formatting": {
+          "points": 3,
+          "max": 3,
+          "note": "Numbered"
+        },
+        "packet_requestions": {
+          "points": 0,
+          "max": 0,
+          "penalty_per": -2,
+          "found": []
+        },
+        "reading_comprehension": {
+          "points": 5,
+          "max": 5,
+          "note": "Referenced specific packet details"
+        },
+        "complexity_awareness": {
+          "points": 0,
+          "max": 3,
+          "tier": "S1"
+        },
+        "prioritization": {
+          "points": 3,
+          "max": 3,
+          "critical_asked": 1,
+          "critical_total": 1
+        }
+      }
+    },
+    "inquiry_total": {
+      "score": 64,
+      "max": 75
+    },
+    "deliverables": {
+      "score": 0,
+      "max": 50,
+      "details": {
+        "files": {
+          "score": 0,
+          "max": 35,
+          "details": [
+            {
+              "name": "Architecture.md",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            },
+            {
+              "name": "ASSUMPTIONS.md",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            },
+            {
+              "name": "README.md",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            },
+            {
+              "name": "Source code",
+              "points": 0,
+              "max": 10,
+              "status": "MISSING"
+            },
+            {
+              "name": "Tests",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            },
+            {
+              "name": "Build instructions",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            }
+          ]
+        },
+        "requirements": {
+          "score": 0,
+          "max": 15,
+          "details": [
+            {
+              "name": "Customer management",
+              "points": 0,
+              "max": 3,
+              "status": "MISSING"
+            },
+            {
+              "name": "Appointment scheduling",
+              "points": 0,
+              "max": 3,
+              "status": "MISSING"
+            },
+            {
+              "name": "Job completion",
+              "points": 0,
+              "max": 3,
+              "status": "MISSING"
+            },
+            {
+              "name": "Search customers",
+              "points": 0,
+              "max": 3,
+              "status": "MISSING"
+            },
+            {
+              "name": "Print daily schedule",
+              "points": 0,
+              "max": 3,
+              "status": "MISSING"
+            }
+          ]
+        }
+      }
+    },
+    "deliverables_total": {
+      "score": 0,
+      "max": 50
+    },
+    "assumptions": {
+      "score": 0,
+      "max": 15,
+      "details": {
+        "note": "ASSUMPTIONS.md not found"
+      }
+    },
+    "architecture": {
+      "score": 0,
+      "max": 20,
+      "details": {
+        "note": "Architecture.md not found"
+      }
+    },
+    "security": {
+      "score": 0,
+      "max": 5,
+      "details": [
+        {
+          "name": "Login required",
+          "points": 0,
+          "max": 2,
+          "status": "MISSING"
+        },
+        {
+          "name": "Basic security (no PCI/HIPAA needed, but standard practices)",
+          "points": 0,
+          "max": 3,
+          "status": "MISSING"
+        }
+      ]
+    },
+    "engineering_total": {
+      "score": 0,
+      "max": 40
+    },
+    "documentation": {
+      "score": 0,
+      "max": 30,
+      "details": {
+        "note": "README.md not found"
+      }
+    },
+    "documentation_total": {
+      "score": 0,
+      "max": 30
+    }
+  },
+  "final": {
+    "score": 64,
+    "max": 200,
+    "percentage": 32.0,
+    "grade": "F"
+  }
+}

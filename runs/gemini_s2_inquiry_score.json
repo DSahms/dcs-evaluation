@@ -1,0 +1,317 @@
+{
+  "tier": "S2",
+  "tier_name": "Warehouse Inventory Manager",
+  "timestamp": "2026-07-08T20:39:53.832428",
+  "scores": {
+    "inquiry_omissions": {
+      "score": 70,
+      "max": 70,
+      "details": [
+        {
+          "id": 1,
+          "topic": "Accounting Integration Details",
+          "weight": "CRITICAL",
+          "points_earned": 15,
+          "points_possible": 15,
+          "status": "ASKED",
+          "matched_keywords": [
+            "accounting",
+            "integrate",
+            "sync",
+            "real-time",
+            "batch",
+            "reconcil"
+          ]
+        },
+        {
+          "id": 2,
+          "topic": "Barcode Scanning Implementation",
+          "weight": "HIGH",
+          "points_earned": 10,
+          "points_possible": 10,
+          "status": "ASKED",
+          "matched_keywords": [
+            "barcode",
+            "scanner",
+            "hardware",
+            "scan",
+            "mobile",
+            "Zebra",
+            "device"
+          ]
+        },
+        {
+          "id": 3,
+          "topic": "Inventory Tracking Method",
+          "weight": "HIGH",
+          "points_earned": 10,
+          "points_possible": 10,
+          "status": "ASKED",
+          "matched_keywords": [
+            "track",
+            "FIFO",
+            "LIFO",
+            "lot",
+            "expiration",
+            "serial",
+            "bin",
+            "location"
+          ]
+        },
+        {
+          "id": 4,
+          "topic": "Two-Warehouse Sync & Conflict Resolution",
+          "weight": "CRITICAL",
+          "points_earned": 15,
+          "points_possible": 15,
+          "status": "ASKED",
+          "matched_keywords": [
+            "sync",
+            "real-time",
+            "transfer",
+            "transit",
+            "database"
+          ]
+        },
+        {
+          "id": 5,
+          "topic": "Role Permissions Granularity",
+          "weight": "HIGH",
+          "points_earned": 10,
+          "points_possible": 10,
+          "status": "ASKED",
+          "matched_keywords": [
+            "warehouse",
+            "accounting"
+          ]
+        },
+        {
+          "id": 6,
+          "topic": "Audit Log Scope & Retention",
+          "weight": "MODERATE",
+          "points_earned": 5,
+          "points_possible": 5,
+          "status": "ASKED",
+          "matched_keywords": [
+            "audit",
+            "log",
+            "event"
+          ]
+        },
+        {
+          "id": 7,
+          "topic": "Reports \u00e2\u20ac\u201d What Reports?",
+          "weight": "MODERATE",
+          "points_earned": 5,
+          "points_possible": 5,
+          "status": "ASKED",
+          "matched_keywords": [
+            "scheduled"
+          ]
+        }
+      ]
+    },
+    "inquiry_quality": {
+      "score": 18,
+      "max": 25,
+      "raw_total": 18,
+      "details": {
+        "batch_submission": {
+          "points": 3,
+          "max": 3,
+          "note": "Assumed single submission"
+        },
+        "clear_formatting": {
+          "points": 0,
+          "max": 3,
+          "note": "No clear formatting"
+        },
+        "packet_requestions": {
+          "points": 0,
+          "max": 0,
+          "penalty_per": -2,
+          "found": []
+        },
+        "reading_comprehension": {
+          "points": 5,
+          "max": 5,
+          "note": "Referenced specific packet details"
+        },
+        "complexity_awareness": {
+          "points": 5,
+          "max": 5,
+          "tier": "S2"
+        },
+        "prioritization": {
+          "points": 5,
+          "max": 5,
+          "critical_asked": 2,
+          "critical_total": 2
+        }
+      }
+    },
+    "inquiry_total": {
+      "score": 88,
+      "max": 95
+    },
+    "deliverables": {
+      "score": 0,
+      "max": 55,
+      "details": {
+        "files": {
+          "score": 0,
+          "max": 35,
+          "details": [
+            {
+              "name": "Architecture.md",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            },
+            {
+              "name": "ASSUMPTIONS.md",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            },
+            {
+              "name": "README.md",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            },
+            {
+              "name": "Source code",
+              "points": 0,
+              "max": 10,
+              "status": "MISSING"
+            },
+            {
+              "name": "Tests",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            },
+            {
+              "name": "Deployment guide",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            },
+            {
+              "name": "Build instructions",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            }
+          ]
+        },
+        "requirements": {
+          "score": 0,
+          "max": 20,
+          "details": [
+            {
+              "name": "Inventory management",
+              "points": 0,
+              "max": 4,
+              "status": "MISSING"
+            },
+            {
+              "name": "Transfers between warehouses",
+              "points": 0,
+              "max": 4,
+              "status": "MISSING"
+            },
+            {
+              "name": "Barcode scanning",
+              "points": 0,
+              "max": 3,
+              "status": "MISSING"
+            },
+            {
+              "name": "Audit log",
+              "points": 0,
+              "max": 3,
+              "status": "MISSING"
+            },
+            {
+              "name": "Reports",
+              "points": 0,
+              "max": 3,
+              "status": "MISSING"
+            },
+            {
+              "name": "Permissions/role-based access",
+              "points": 0,
+              "max": 3,
+              "status": "MISSING"
+            }
+          ]
+        }
+      }
+    },
+    "deliverables_total": {
+      "score": 0,
+      "max": 55
+    },
+    "assumptions": {
+      "score": 0,
+      "max": 20,
+      "details": {
+        "note": "ASSUMPTIONS.md not found"
+      }
+    },
+    "architecture": {
+      "score": 0,
+      "max": 31,
+      "details": {
+        "note": "Architecture.md not found"
+      }
+    },
+    "security": {
+      "score": 0,
+      "max": 10,
+      "details": [
+        {
+          "name": "Role-based access control",
+          "points": 0,
+          "max": 4,
+          "status": "MISSING"
+        },
+        {
+          "name": "Encrypted transport",
+          "points": 0,
+          "max": 3,
+          "status": "MISSING"
+        },
+        {
+          "name": "Audit logging",
+          "points": 0,
+          "max": 3,
+          "status": "MISSING"
+        }
+      ]
+    },
+    "engineering_total": {
+      "score": 0,
+      "max": 61
+    },
+    "documentation": {
+      "score": 0,
+      "max": 35,
+      "details": {
+        "note": "README.md not found"
+      }
+    },
+    "documentation_total": {
+      "score": 0,
+      "max": 35
+    }
+  },
+  "final": {
+    "score": 88,
+    "max": 250,
+    "percentage": 35.2,
+    "grade": "F"
+  }
+}

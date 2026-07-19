@@ -1,0 +1,7 @@
+# Temp extract of nested zip — not source of truth
+_zip_check/
+
+# OS junk
+Thumbs.db
+Desktop.ini
+.DS_Store

@@ -1,0 +1,23 @@
+Clarification Questions - Gemini S3 Run (2026-07-08)
+
+DATA MIGRATION & PHASED ROLLOUT STRATEGY
+
+System Co-existence: During the phased rollout, will the new system and the legacy system need to operate simultaneously (e.g., rolling out one facility at a time)? If so, is bi-directional data synchronization required between the two systems to maintain a single source of truth, or is it a hard cutover per facility?
+
+Historical Data Volume: For the 15+ years of accumulated patient records, are we required to migrate all historical data into the new transactional database for immediate access, or should we migrate only active patients while moving historical records into a read-only, long-term archival data store?
+
+CLINICAL INTEGRATIONS & INTEROPERABILITY
+
+Interface Standards: For the existing pharmacy and laboratory systems (pharmacy-interface-spec.pdf, lab-interface-spec.pdf), do these systems utilize standard healthcare interoperability protocols (e.g., HL7 v2, FHIR, DICOM) or are they proprietary APIs?
+
+High Availability & Offline Modes: Given the 24x7 availability requirement and the critical nature of clinical care, does the system need a localized read-only or offline fallback mode for hospital facilities in the event of a total network outage to the primary data center/cloud provider?
+
+SECURITY, IDENTITY & COMPLIANCE
+
+Identity Provider (IdP): The packet mentions Enterprise identity management. Does RHP have an existing centralized IdP (e.g., Active Directory, Azure AD, Okta) that the new system must integrate with via SAML or OIDC, or are we expected to architect the identity management solution from scratch?
+
+Audit Logging Scale: For the comprehensive audit trail (tracking 8,000+ users viewing/editing PHI), what is the required retention period for these logs (e.g., 7 years), and do they need to be stored in a specialized immutable ledger/WORM storage to satisfy HIPAA or internal compliance audits?
+
+BILLING & FINANCIALS
+
+Billing Integration: For the billing functionality (4.6), does this module handle the actual clearinghouse integrations for claims processing (e.g., X12 EDI formats), or is it primarily capturing charge codes (ICD-10/CPT) to be passed off to a separate, external revenue cycle management (RCM) system?

@@ -1,0 +1,16 @@
+Clarification Questions - Gemini S1 Run (2026-07-07)
+
+1. Authentication & User Management
+With only three users (one Office Manager and two Field Technicians), do I need to build full user registration and password recovery flows, or can I assume the Office Manager will manually provision and manage these three accounts directly in the system?
+
+2. Hosting & Deployment
+Given the limited budget, does GreenThumb have any existing hosting infrastructure (such as a basic VPS), or should I design the build and deployment instructions around a low-cost, serverless, or basic cloud-hosting tier?
+
+3. Job Completion Workflow
+When field technicians mark a job as complete, is a simple status toggle (e.g., "Pending" to "Done") sufficient, or do they need the ability to attach post-job notes or track the duration of the visit?
+
+4. Scheduling Specifics
+For appointment scheduling, are these jobs assigned specific time slots (e.g., 10:00 AM – 11:00 AM), or are they simply compiled as an unordered daily checklist assigned to a specific technician?
+
+5. Customer Data Scope
+Beyond basic contact information (Name, Address, Phone Number), are there any specific fields required for the customer profiles, such as property size, gate codes, or service frequency?

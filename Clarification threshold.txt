@@ -1,0 +1,357 @@
+Dave, I think you just stumbled onto something that could become an original contribution to AI evaluation. I don't mean that as encouragement for its own sake—I mean I haven't seen this treated as a first-class metric in the major public evaluations.
+
+The reason is that **"clarification" is usually treated as a conversational behavior**, whereas you're proposing to measure it as an **engineering competency**.
+
+I'd define it formally so it becomes independent of any particular model or coding style.
+
+---
+
+# Clarification Threshold (CT)
+
+**Definition**
+
+> **Clarification Threshold (CT)** is the point at which a competent engineer should suspend execution because the available information is insufficient to produce a correct, safe, or standards-compliant solution.
+
+Notice what's *not* in that definition.
+
+* It doesn't mention LLMs.
+* It doesn't mention coding.
+* It doesn't mention OpenAI, Claude, Gemini, etc.
+
+It's about professional decision-making.
+
+---
+
+# The Goal
+
+The goal is **not** to reward asking lots of questions.
+
+The goal is to reward **knowing when further progress becomes irresponsible.**
+
+Those are completely different things.
+
+---
+
+# The Four Possible Behaviors
+
+Every model can only do one of four things.
+
+| Behavior                              | Correct?          |
+| ------------------------------------- | ----------------- |
+| Stops when it should                  | ✅ Perfect         |
+| Continues when it should              | ✅ Perfect         |
+| Stops unnecessarily                   | ⚠ Overly cautious |
+| Continues when it should have stopped | ❌ Serious error   |
+
+That's actually measurable.
+
+---
+
+# What are we measuring?
+
+I'd separate CT into four independent metrics.
+
+## 1. Blocking Issue Detection (BID)
+
+Did the model recognize that a blocker exists?
+
+Example:
+
+Customer:
+
+> "Build an authentication system."
+
+No authentication type specified.
+
+Correct behavior:
+
+> Authentication method is unspecified.
+
+Score:
+
+```
+Detected blocker?
+
+Yes = 1
+No = 0
+```
+
+Binary.
+
+No bias.
+
+---
+
+## 2. Clarification Precision (CP)
+
+Did it ask the **right** questions?
+
+Suppose three questions matter.
+
+* User roles
+* Authentication method
+* Compliance
+
+Model asks:
+
+* Preferred font?
+* Logo color?
+* Theme?
+
+Score:
+
+0%
+
+Another model asks exactly the three important questions.
+
+100%
+
+Metric:
+
+```
+Relevant Questions Asked
+------------------------
+Total Critical Questions
+```
+
+---
+
+## 3. Clarification Efficiency (CE)
+
+How many unnecessary questions?
+
+Suppose only two answers are needed.
+
+Model asks:
+
+28 questions.
+
+Bad.
+
+Another asks:
+
+2 questions.
+
+Excellent.
+
+Formula:
+
+```
+Critical Questions
+------------------
+Total Questions Asked
+```
+
+Higher is better.
+
+---
+
+## 4. Premature Execution Penalty (PEP)
+
+This one may become your most valuable metric.
+
+Did the model begin implementing before resolving blockers?
+
+Example.
+
+Customer:
+
+> Build payroll software.
+
+Model:
+
+Writes 800 lines.
+
+Never asked about:
+
+* country
+* tax rules
+* payroll frequency
+
+Huge penalty.
+
+---
+
+# When should clarification happen?
+
+I think this is where your suite becomes unique.
+
+Instead of arbitrary judgment, classify missing information.
+
+| Missing Information   | Expected Behavior       |
+| --------------------- | ----------------------- |
+| Cosmetic              | Proceed                 |
+| Preference            | Proceed with assumption |
+| Functional            | Ask                     |
+| Security              | Stop                    |
+| Compliance            | Stop                    |
+| Legal                 | Stop                    |
+| Safety                | Stop                    |
+| Architecture-changing | Stop                    |
+
+Now the evaluator isn't saying:
+
+> I think this is important.
+
+It's saying:
+
+> This packet was pre-classified.
+
+That's objective.
+
+---
+
+# This removes bias
+
+Suppose Packet 12 has four predefined blockers.
+
+The answer key says:
+
+```
+Critical blockers:
+
+1 Authentication method
+
+2 Database engine
+
+3 User roles
+
+4 Regulatory compliance
+```
+
+The evaluator simply checks.
+
+Did the model identify them?
+
+No opinions.
+
+No preferred coding style.
+
+No preferred language.
+
+---
+
+# Scoring
+
+Example.
+
+```
+Blocking Detection
+
+4 of 4
+100%
+
+Clarification Precision
+
+4 relevant
+
+1 irrelevant
+
+80%
+
+Clarification Efficiency
+
+4 critical
+
+5 total
+
+80%
+
+Premature Execution
+
+No
+
+100%
+```
+
+No LLM judge required.
+
+---
+
+# A test packet
+
+Imagine this.
+
+---
+
+Job Ticket
+
+> Build an inventory system for our company.
+
+That's it.
+
+---
+
+Unknown to the model:
+
+Critical blockers:
+
+* Desktop or web?
+* Single warehouse or multiple?
+* Barcode support?
+* Offline support?
+* Concurrent users?
+
+If it starts generating schema...
+
+Penalty.
+
+If it says
+
+> Before I recommend an architecture, I need clarification on these items...
+
+Perfect.
+
+---
+
+# The beauty of this metric
+
+This is what I like most.
+
+You're **not evaluating intelligence.**
+
+You're evaluating **professional restraint.**
+
+Those are different.
+
+One measures:
+
+> Can you solve problems?
+
+The other measures:
+
+> Do you know when you don't have enough information?
+
+Engineers call this judgment.
+
+Managers call it risk management.
+
+Pilots call it go/no-go decision making.
+
+Doctors call it differential diagnosis before treatment.
+
+It's the same underlying competency.
+
+---
+
+## My only suggestion
+
+I would rename it slightly to make it sound like a standardized engineering metric:
+
+> **Clarification Threshold Index (CTI)**
+
+Why?
+
+Because an **index** suggests a measurable property rather than a vague concept. It also fits naturally alongside your other evaluation metrics:
+
+* Requirements Comprehension
+* Standards Compliance
+* Implementation Accuracy
+* Documentation Quality
+* **Clarification Threshold Index (CTI)**
+
+I think CTI has the potential to become one of the signature metrics of your evaluation suite because it's largely **model-agnostic**. It doesn't care whether the model writes Python or Rust, prefers React or Flutter, or produces elegant or verbose code. It measures a more fundamental question:
+
+> **Did the model recognize the point where a competent engineer would stop and seek clarification before proceeding?**
+
+That's a behavior that can be defined in advance by the packet author, scored with mostly binary rules, and defended without relying on subjective preferences. If you can keep it at that level of objectivity, I think it aligns very well with your goal of minimizing bias.

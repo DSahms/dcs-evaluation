@@ -1,0 +1,106 @@
+{
+  "tier": "S1",
+  "name": "LawnCare Lite",
+  "max_total_score": 200,
+  "scoring": {
+    "inquiry_omissions_max": 55,
+    "inquiry_quality_max": 20,
+    "deliverables_files_max": 35,
+    "deliverables_requirements_max": 15,
+    "engineering_assumptions_max": 15,
+    "engineering_architecture_max": 20,
+    "engineering_security_max": 5,
+    "engineering_tradeoffs_bonus": 2,
+    "engineering_assumptions_relevance_bonus": 3,
+    "engineering_assumptions_edge_case_bonus": 2,
+    "documentation_max": 30
+  },
+  "required_files": [
+    {"name": "Architecture.md", "points": 5},
+    {"name": "ASSUMPTIONS.md", "points": 5},
+    {"name": "README.md", "points": 5},
+    {"name": "Source code", "points": 10, "check": "has_code_files"},
+    {"name": "Tests", "points": 5, "check": "has_test_files"},
+    {"name": "Build instructions", "points": 5, "check": "has_build_instructions"}
+  ],
+  "functional_requirements": [
+    {"name": "Customer management", "points": 3, "keywords": ["customer", "manage", "add", "edit", "view", "create", "update", "delete", "CRUD"]},
+    {"name": "Appointment scheduling", "points": 3, "keywords": ["schedule", "appoint", "book", "calendar", "slot", "assign"]},
+    {"name": "Job completion", "points": 3, "keywords": ["complete", "completion", "status", "done", "finish", "mark"]},
+    {"name": "Search customers", "points": 3, "keywords": ["search", "find", "filter", "query", "look up"]},
+    {"name": "Print daily schedule", "points": 3, "keywords": ["print", "daily", "schedule", "report", "pdf", "export"]}
+  ],
+  "security_requirements": [
+    {"name": "Login required", "points": 2, "keywords": ["auth", "login", "sign in", "password", "session", "credential"]},
+    {"name": "Basic security (no PCI/HIPAA needed, but standard practices)", "points": 3, "keywords": ["hash", "encrypt", "HTTPS", "TLS", "ssl", "input validat", "sanitize", "XSS", "CSRF"]}
+  ],
+  "over_engineering_signals": [
+    "microservice", "event-driven", "message queue", "kubernetes", "k8s",
+    "event sourcing", "CQRS", "load balancer", "service mesh", "api gateway",
+    "grpc", "kafka", "rabbitmq", "redis cluster", "docker swarm",
+    "scalable to million", "horizontal scale"
+  ],
+  "under_engineering_signals": [
+    "flat file", ".txt", ".csv", "no auth", "no login", "no database",
+    "no error handl", "global variable"
+  ],
+  "omissions": [
+    {
+      "id": 1,
+      "topic": "Scheduling Rules",
+      "weight": "CRITICAL",
+      "points": 15,
+      "keywords": ["schedule", "long", "duration", "overlap", "assign", "time window", "book", "hour", "minute", "slot", "how long", "window"],
+      "answer": "Jobs are 30min, 1hr, or 2hr based on service type. No overlapping appointments per technician. Office manager assigns manually. Customers can request preferred time slots but scheduling is done by the office."
+    },
+    {
+      "id": 2,
+      "topic": "Customer Data Format",
+      "weight": "HIGH",
+      "points": 10,
+      "keywords": ["CSV", "columns", "format", "fields", "data", "encoding", "sample", "full", "records", "what's in", "structure"],
+      "answer": "Columns: first_name, last_name, email, phone, address, city, state, zip, service_type (mowing, fertilization, aeration, full_package), frequency (weekly, biweekly, monthly), notes. UTF-8 encoding. This is the full active customer list — 47 customers."
+    },
+    {
+      "id": 3,
+      "topic": "Authentication & User Accounts",
+      "weight": "HIGH",
+      "points": 10,
+      "keywords": ["account", "create", "register", "sign up", "password", "reset", "login", "user", "credential"],
+      "answer": "Office manager creates all accounts. No self-registration. Password reset sends an email with a temporary link valid for 24 hours."
+    },
+    {
+      "id": 4,
+      "topic": "Job Completion Details",
+      "weight": "HIGH",
+      "points": 10,
+      "keywords": ["complete", "completion", "status", "notes", "photo", "notify", "notification", "start", "in progress", "what does", "involve", "details"],
+      "answer": "Technician taps 'Complete' which changes status and records timestamp. Optional notes field (max 500 chars). Optional photo upload (up to 3). Customer gets a confirmation email. Jobs cannot be completed unless status is 'In Progress'."
+    },
+    {
+      "id": 5,
+      "topic": "Print Daily Schedule Content",
+      "weight": "MODERATE",
+      "points": 5,
+      "keywords": ["print", "daily", "what", "information", "address", "direction", "route", "contain", "include", "on it", "show"],
+      "answer": "Office manager prints one schedule per technician. Shows: time, customer name, address, service type, duration, and any notes. No driving directions needed — techs know the area."
+    },
+    {
+      "id": 6,
+      "topic": "Cancellation / No-Show / Reschedule / Weather",
+      "weight": "MODERATE",
+      "points": 5,
+      "keywords": ["cancel", "no-show", "reschedule", "weather", "rain", "policy", "missed", "absent", "what if", "happen", "edge", "delay"],
+      "answer": "Customer can cancel or reschedule by calling the office. No automated cancellation. If weather prevents work, office manager reschedules all affected jobs and notifies customers. No cancellation fees."
+    }
+  ],
+  "packet_requestion_patterns": [
+    {"pattern": "what is the project|what am I building|what's this about", "section": "Section 1 (Project Overview)"},
+    {"pattern": "who (are|is) the user", "section": "Section 3 (Users)"},
+    {"pattern": "what (are|is) the (functional )?requirement", "section": "Section 4 (Functional Requirements)"},
+    {"pattern": "what (should|do) I (deliver|submit|produce)", "section": "Section 8 (Deliverables)"},
+    {"pattern": "what (assets|files) (do I have|are provided|were provided)", "section": "Section 9 (Provided Assets)"}
+  ],
+  "no_questions_penalty": -10,
+  "requestion_penalty": -2
+}

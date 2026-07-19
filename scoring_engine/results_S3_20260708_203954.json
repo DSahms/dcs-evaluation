@@ -1,0 +1,342 @@
+{
+  "tier": "S3",
+  "tier_name": "Regional Hospital Information System",
+  "timestamp": "2026-07-08T20:39:54.092719",
+  "scores": {
+    "inquiry_omissions": {
+      "score": 95,
+      "max": 95,
+      "details": [
+        {
+          "id": 1,
+          "topic": "Existing Platform & Data Migration",
+          "weight": "CRITICAL",
+          "points_earned": 20,
+          "points_possible": 20,
+          "status": "ASKED",
+          "matched_keywords": [
+            "existing",
+            "system",
+            "migrate",
+            "migration",
+            "database",
+            "years",
+            "cutover"
+          ]
+        },
+        {
+          "id": 2,
+          "topic": "Phased Rollout Plan",
+          "weight": "CRITICAL",
+          "points_earned": 15,
+          "points_possible": 15,
+          "status": "ASKED",
+          "matched_keywords": [
+            "phase",
+            "rollout",
+            "module",
+            "cutover"
+          ]
+        },
+        {
+          "id": 3,
+          "topic": "HIPAA Compliance Specifics",
+          "weight": "CRITICAL",
+          "points_earned": 15,
+          "points_possible": 15,
+          "status": "ASKED",
+          "matched_keywords": [
+            "HIPAA",
+            "compliance",
+            "PHI",
+            "standard",
+            "protocol"
+          ]
+        },
+        {
+          "id": 4,
+          "topic": "Multi-Hospital Data Architecture",
+          "weight": "CRITICAL",
+          "points_earned": 15,
+          "points_possible": 15,
+          "status": "ASKED",
+          "matched_keywords": [
+            "hospital",
+            "centralized",
+            "separate",
+            "single",
+            "facility"
+          ]
+        },
+        {
+          "id": 5,
+          "topic": "Pharmacy & Laboratory Integrations",
+          "weight": "HIGH",
+          "points_earned": 10,
+          "points_possible": 10,
+          "status": "ASKED",
+          "matched_keywords": [
+            "pharmacy",
+            "lab",
+            "laboratory",
+            "HL7",
+            "FHIR",
+            "integration",
+            "external",
+            "protocol"
+          ]
+        },
+        {
+          "id": 6,
+          "topic": "Downtime, DR, and RPO/RTO",
+          "weight": "HIGH",
+          "points_earned": 10,
+          "points_possible": 10,
+          "status": "ASKED",
+          "matched_keywords": [
+            "availability",
+            "data center"
+          ]
+        },
+        {
+          "id": 7,
+          "topic": "Billing & Insurance Complexity",
+          "weight": "HIGH",
+          "points_earned": 10,
+          "points_possible": 10,
+          "status": "ASKED",
+          "matched_keywords": [
+            "billing",
+            "claim",
+            "ICD-10",
+            "CPT",
+            "revenue",
+            "clearinghouse",
+            "revenue cycle",
+            "charge"
+          ]
+        }
+      ]
+    },
+    "inquiry_quality": {
+      "score": 25,
+      "max": 30,
+      "raw_total": 25,
+      "details": {
+        "batch_submission": {
+          "points": 3,
+          "max": 3,
+          "note": "Assumed single submission"
+        },
+        "clear_formatting": {
+          "points": 0,
+          "max": 3,
+          "note": "No clear formatting"
+        },
+        "packet_requestions": {
+          "points": 0,
+          "max": 0,
+          "penalty_per": -2,
+          "found": []
+        },
+        "reading_comprehension": {
+          "points": 5,
+          "max": 5,
+          "note": "Referenced specific packet details"
+        },
+        "complexity_awareness": {
+          "points": 8,
+          "max": 8,
+          "tier": "S3"
+        },
+        "prioritization": {
+          "points": 9,
+          "max": 9,
+          "critical_asked": 4,
+          "critical_total": 4
+        }
+      }
+    },
+    "inquiry_total": {
+      "score": 120,
+      "max": 125
+    },
+    "deliverables": {
+      "score": 0,
+      "max": 55,
+      "details": {
+        "files": {
+          "score": 0,
+          "max": 35,
+          "details": [
+            {
+              "name": "Architecture.md",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            },
+            {
+              "name": "ASSUMPTIONS.md",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            },
+            {
+              "name": "README.md",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            },
+            {
+              "name": "Source code",
+              "points": 0,
+              "max": 10,
+              "status": "MISSING"
+            },
+            {
+              "name": "Tests",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            },
+            {
+              "name": "Deployment guide",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            },
+            {
+              "name": "Operations guide",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            },
+            {
+              "name": "Build instructions",
+              "points": 0,
+              "max": 5,
+              "status": "MISSING"
+            }
+          ]
+        },
+        "requirements": {
+          "score": 0,
+          "max": 20,
+          "details": [
+            {
+              "name": "Patient registration",
+              "points": 0,
+              "max": 3,
+              "status": "MISSING"
+            },
+            {
+              "name": "Scheduling",
+              "points": 0,
+              "max": 3,
+              "status": "MISSING"
+            },
+            {
+              "name": "Clinical notes",
+              "points": 0,
+              "max": 3,
+              "status": "MISSING"
+            },
+            {
+              "name": "Pharmacy",
+              "points": 0,
+              "max": 3,
+              "status": "MISSING"
+            },
+            {
+              "name": "Laboratory",
+              "points": 0,
+              "max": 3,
+              "status": "MISSING"
+            },
+            {
+              "name": "Billing",
+              "points": 0,
+              "max": 3,
+              "status": "MISSING"
+            },
+            {
+              "name": "Auditing",
+              "points": 0,
+              "max": 2,
+              "status": "MISSING"
+            }
+          ]
+        }
+      }
+    },
+    "deliverables_total": {
+      "score": 0,
+      "max": 55
+    },
+    "assumptions": {
+      "score": 0,
+      "max": 30,
+      "details": {
+        "note": "ASSUMPTIONS.md not found"
+      }
+    },
+    "architecture": {
+      "score": 0,
+      "max": 45,
+      "details": {
+        "note": "Architecture.md not found"
+      }
+    },
+    "security": {
+      "score": 0,
+      "max": 15,
+      "details": [
+        {
+          "name": "Enterprise identity (SSO/LDAP/AD)",
+          "points": 0,
+          "max": 4,
+          "status": "MISSING"
+        },
+        {
+          "name": "Encryption (at rest and in transit)",
+          "points": 0,
+          "max": 4,
+          "status": "MISSING"
+        },
+        {
+          "name": "Comprehensive auditing",
+          "points": 0,
+          "max": 4,
+          "status": "MISSING"
+        },
+        {
+          "name": "HIPAA compliance measures",
+          "points": 0,
+          "max": 3,
+          "status": "MISSING"
+        }
+      ]
+    },
+    "engineering_total": {
+      "score": 0,
+      "max": 90
+    },
+    "documentation": {
+      "score": 0,
+      "max": 30,
+      "details": {
+        "note": "README.md not found"
+      }
+    },
+    "documentation_total": {
+      "score": 0,
+      "max": 30
+    }
+  },
+  "final": {
+    "score": 120,
+    "max": 300,
+    "percentage": 40.0,
+    "grade": "D"
+  }
+}
